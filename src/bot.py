@@ -4,6 +4,11 @@ import json
 import requests
 import time
 
+import pprint as pp
+
+PP = pp.PrettyPrinter()
+
+
 def get_url(url):
     response = requests.get(url)
     content = response.content.decode("utf8")
@@ -16,10 +21,21 @@ def get_json_from_url(url):
     return json.loads(content)
 
 
-def get_updates():
-    url = BOT_URL + "getUpdates"
+def get_updates(offset = None):
+    if offset == None:
+        url = BOT_URL + "getUpdates"
+    else:
+        url = BOT_URL + "getUpdates?offset={}".format(offset)
 
     return get_json_from_url(url)
+
+def get_last_update_id(updates):
+    update_ids = []
+
+    for update in updates["result"]:
+        update_ids.append(int(update["update_id"]))
+
+    return max(update_ids)
 
 
 def get_last_chat_id_and_text(updates):
@@ -34,16 +50,21 @@ def send_message(text, chat_id):
     url = BOT_URL + "sendMessage?text={}&chat_id={}".format(text, chat_id)
     get_url(url)
 
+def echo_all(updates):
+    for update in updates["result"]:
+        text = update["message"]["text"]
+        chat = update["message"]["chat"]["id"]
+        send_message(text, chat)
 
 def main():
-    last_textchat = (None, None)
+    last_update_id = None
     while True:
-        text, chat = get_last_chat_id_and_text(get_updates())
-        if (text, chat) != last_textchat:
-            send_message(text, chat)
-            last_textchat = (text, chat)
+        updates = get_updates(last_update_id)
+        if len(updates["result"]) > 0:
+            pp.pprint(updates)
+            last_update_id = get_last_update_id(updates) + 1
+            echo_all(updates)
         time.sleep(0.5)
-
 
 if __name__ == '__main__':
     main()
