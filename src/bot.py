@@ -3,6 +3,7 @@ from config import BOT_URL
 import json
 import requests
 import time
+import urllib
 
 import pprint as pp
 
@@ -49,6 +50,7 @@ def get_last_chat_id_and_text(updates):
 
 
 def send_message(text, chat_id):
+    text = urllib.parse.quote_plus(text)
     url = BOT_URL + "sendMessage?text={}&chat_id={}".format(text, chat_id)
     get_url(url)
 
