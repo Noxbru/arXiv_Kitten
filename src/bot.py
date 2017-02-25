@@ -69,9 +69,15 @@ def handle_updates(updates):
         chat = update["message"]["chat"]["id"]
         items = db.get_items(chat)
 
-        if text == "/done":
+        if text == "/start":
+            send_message("Welcome to the TO DO bot", chat)
+
+        elif text == "/done":
             keyboard = build_keyboard(items)
             send_message("Select an item to delete", chat, keyboard)
+
+        elif text.startswith('/'):
+            continue
 
         elif text in items:
             db.delete_item(text, chat)
