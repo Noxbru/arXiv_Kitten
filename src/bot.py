@@ -22,10 +22,12 @@ def get_json_from_url(url):
 
 
 def get_updates(offset = None):
+    update_base_url = BOT_URL + "getUpdates?timeout=90"
+
     if offset == None:
-        url = BOT_URL + "getUpdates"
+        url = update_base_url
     else:
-        url = BOT_URL + "getUpdates?offset={}".format(offset)
+        url = update_base_url + "&offset={}".format(offset)
 
     return get_json_from_url(url)
 
