@@ -2,13 +2,14 @@ from config import BOT_URL
 from dbhelper import DBHelper
 
 import telegram as tm
+from user import User
 
 import pprint as pp
 import time
 
 class arXiv_Kitten_bot:
     def __init__(self):
-        self.users = []
+        self.users = {}
 
     def handle_updates(self, updates):
         for update in updates['result']:
@@ -16,10 +17,14 @@ class arXiv_Kitten_bot:
             chat      = update['message']['chat']['id']
             user_name = update['message']['chat']['username']
 
+            if chat not in self.users.keys():
+                self.users[chat] = User(chat, user_name)
+                print("Created new user: {}".format(user_name))
+
             if text == "/start":
                 tm.send_message(\
-                    "Hello {},"\
-                    "\nWelcome to the arXiv Kitten bot".format(user_name), chat)
+                    "Hello {},\n"\
+                    "Welcome to the arXiv Kitten bot".format(user_name), chat)
 
             elif text.startswith('/'):
                 continue
