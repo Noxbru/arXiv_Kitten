@@ -1,8 +1,7 @@
-from config import BOT_URL
 from dbhelper import DBHelper
+from user import User
 
 import telegram as tm
-from user import User
 
 import pprint as pp
 import time
