@@ -2,6 +2,8 @@ import json
 import requests
 import urllib
 
+from config import BOT_URL
+
 def get_url(url):
     response = requests.get(url)
     content = response.content.decode("utf8")
@@ -50,33 +52,6 @@ def send_message(text, chat_id, reply_markup = None):
 
     get_url(url)
 
-def handle_updates(updates):
-    for update in updates["result"]:
-        text = update["message"]["text"]
-        chat = update["message"]["chat"]["id"]
-        items = db.get_items(chat)
-
-        if text == "/start":
-            send_message("Welcome to the TO DO bot", chat)
-
-        elif text == "/done":
-            keyboard = build_keyboard(items)
-            send_message("Select an item to delete", chat, keyboard)
-
-        elif text.startswith('/'):
-            continue
-
-        elif text in items:
-            db.delete_item(text, chat)
-            items = db.get_items(chat)
-            keyboard = build_keyboard(items)
-            send_message("Select an item to delete", chat, keyboard)
-
-        else:
-            db.add_item(text, chat)
-            items = db.get_items(chat)
-            message = "\n".join(items)
-            send_message(message, chat)
 
 def build_keyboard(items):
     keyboard = [[item] for item in items]
