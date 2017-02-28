@@ -30,6 +30,7 @@ class Entry:
         return regex.search(self.summary)
 
 
+    @staticmethod
     def get_authors(authors):
         regex = re.compile(u" *\<a href=.*\>(?P<author>.*)\<\/a\>")
 
@@ -47,6 +48,7 @@ class Entry:
 
         return _authors
 
+    @staticmethod
     def get_summary(summary):
         summary = summary.replace('\n', ' ')
 
@@ -56,5 +58,6 @@ class Entry:
 
         return summary
 
+    @staticmethod
     def get_title(title):
         return title
