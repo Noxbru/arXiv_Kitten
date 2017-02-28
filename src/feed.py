@@ -194,9 +194,9 @@ class Feed:
 
     def update(self, forced = False):
         if forced:
-            self.feed = feedparser.parser(self.url)
+            self.feed = feedparser.parse(self.url)
         else:
-            self.feed = feedparser.parser(self.url, etag=self.etag)
+            self.feed = feedparser.parse(self.url, etag=self.etag)
 
         self.etag = self.feed.etag
 
