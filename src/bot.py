@@ -18,18 +18,20 @@ class arXiv_Kitten_bot:
             chat      = update['message']['chat']['id']
             user_name = update['message']['chat']['username']
 
+            text_words = text.split(' ')
+
             if chat not in self.users.keys():
                 self.users[chat] = User(chat, user_name)
                 print("Created new user: {}".format(user_name))
 
-            if text == "/start":
+            if text_words[0] == "/start":
                 tm.send_message(\
                     "Hello {},\n"\
                     "Welcome to the arXiv Kitten bot".format(user_name), chat)
 
-            elif text.startswith('/addfeed'):
+            elif text_words[0] == '/addfeed':
                 try:
-                    feed_name = text.split(' ')[1]
+                    feed_name = text_words[1]
                 except Exception as e:
                     tm.send_message(
                             "/addfeed usage:\n"
