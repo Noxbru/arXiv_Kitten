@@ -1,5 +1,6 @@
 from dbhelper import DBHelper
 from user import User
+from feed import Feed
 
 import telegram as tm
 
@@ -24,6 +25,21 @@ class arXiv_Kitten_bot:
                 tm.send_message(\
                     "Hello {},\n"\
                     "Welcome to the arXiv Kitten bot".format(user_name), chat)
+
+            elif text.startswith('/addfeed'):
+                try:
+                    feed_name = text.split(' ')[1]
+                except Exception as e:
+                    tm.send_message(
+                            "/addfeed usage:\n"
+                            "\t/addfeed <abbrev of feed>", chat)
+                    continue
+
+                if not Feed.is_valid(feed_name):
+                    tm.send_message("Invalid feed: {}".format(feed_name), chat)
+                else:
+                    tm.send_message("Feed added: {}".format(feed_name), chat)
+                    self.users[chat].add_feed(feed_name)
 
             elif text.startswith('/'):
                 continue

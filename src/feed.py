@@ -199,3 +199,6 @@ class Feed:
             self.feed = feedparser.parser(self.url, etag=self.etag)
 
         self.etag = self.feed.etag
+
+    def is_valid(feed_name):
+        return feed_name in Feed.feeds.keys()
