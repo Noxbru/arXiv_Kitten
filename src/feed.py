@@ -200,5 +200,6 @@ class Feed:
 
         self.etag = self.feed.etag
 
+    @staticmethod
     def is_valid(feed_name):
         return feed_name in Feed.feeds.keys()
