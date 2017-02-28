@@ -6,6 +6,7 @@ import telegram as tm
 
 import pprint as pp
 import time
+import re
 
 class arXiv_Kitten_bot:
     def __init__(self):
@@ -36,7 +37,7 @@ class arXiv_Kitten_bot:
             chat      = update['message']['chat']['id']
             user_name = update['message']['chat']['username']
 
-            text_words = text.split(' ')
+            text_words = re.findall(r'\"[^\"]*\"|\S+', text)
 
             if chat not in self.users.keys():
                 self.users[chat] = User(chat, user_name)
