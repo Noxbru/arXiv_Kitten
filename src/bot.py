@@ -58,6 +58,8 @@ class arXiv_Kitten_bot:
 
     def handle_updates(self, updates):
         for update in updates['result']:
+            if 'message' not in update.keys(): continue
+
             text      = update['message']['text']
             chat      = update['message']['chat']['id']
             user_name = update['message']['chat']['username']
