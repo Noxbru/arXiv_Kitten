@@ -10,7 +10,7 @@ import time
 class arXiv_Kitten_bot:
     def __init__(self):
         self.users = {}
-        self.feeds = set()
+        self.feeds = {}
 
     def handle_updates(self, updates):
         for update in updates['result']:
@@ -39,9 +39,10 @@ class arXiv_Kitten_bot:
                 if not Feed.is_valid(feed_name):
                     tm.send_message("Invalid feed: {}".format(feed_name), chat)
                 else:
-                    tm.send_message("Feed added: {}".format(feed_name), chat)
-                    self.users[chat].add_feed(feed_name)
-                    self.feeds.add(Feed(feed_name))
+                    if feed_name not in self.feeds.keys():
+                        tm.send_message("Feed added: {}".format(feed_name), chat)
+                        self.users[chat].add_feed(feed_name)
+                        self.feeds[feed_name] = Feed(feed_name)
 
             elif text.startswith('/'):
                 continue
