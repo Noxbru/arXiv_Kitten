@@ -12,6 +12,23 @@ class arXiv_Kitten_bot:
         self.users = {}
         self.feeds = {}
 
+    def add_feed(self, chat, args):
+        try:
+            feed_name = args[1]
+        except Exception as e:
+            tm.send_message(
+                    "/addfeed usage:\n"
+                    "\t/addfeed <abbrev of feed>", chat)
+            return
+
+        if not Feed.is_valid(feed_name):
+            tm.send_message("Invalid feed: {}".format(feed_name), chat)
+        else:
+            if feed_name not in self.feeds.keys():
+                tm.send_message("Feed added: {}".format(feed_name), chat)
+                self.users[chat].add_feed(feed_name)
+                self.feeds[feed_name] = Feed(feed_name)
+
     def handle_updates(self, updates):
         for update in updates['result']:
             text      = update['message']['text']
@@ -30,21 +47,7 @@ class arXiv_Kitten_bot:
                     "Welcome to the arXiv Kitten bot".format(user_name), chat)
 
             elif text_words[0] == '/addfeed':
-                try:
-                    feed_name = text_words[1]
-                except Exception as e:
-                    tm.send_message(
-                            "/addfeed usage:\n"
-                            "\t/addfeed <abbrev of feed>", chat)
-                    continue
-
-                if not Feed.is_valid(feed_name):
-                    tm.send_message("Invalid feed: {}".format(feed_name), chat)
-                else:
-                    if feed_name not in self.feeds.keys():
-                        tm.send_message("Feed added: {}".format(feed_name), chat)
-                        self.users[chat].add_feed(feed_name)
-                        self.feeds[feed_name] = Feed(feed_name)
+                self.add_feed(chat, text_words)
 
             elif text.startswith('/'):
                 continue
