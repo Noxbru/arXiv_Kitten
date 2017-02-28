@@ -1,6 +1,7 @@
 from dbhelper import DBHelper
 from user import User
 from feed import Feed
+from filter import Filter
 
 import telegram as tm
 
@@ -24,12 +25,36 @@ class arXiv_Kitten_bot:
 
         if not Feed.is_valid(feed_name):
             tm.send_message("Invalid feed: {}".format(feed_name), chat)
+
+            return False
+
         else:
             tm.send_message("Feed added: {}".format(feed_name), chat)
             self.users[chat].add_feed(feed_name)
 
             if feed_name not in self.feeds.keys():
                 self.feeds[feed_name] = Feed(feed_name)
+
+    def add_filter(self, chat, args):
+        if len(args) == 3:
+            filter_type = args[1]
+            filter_args = args[2]
+        elif len(args) == 4:
+            feed_name   = args[1]
+            filter_type = args[2]
+            filter_args = args[3]
+
+            if not self.add_feed(chat, args):
+                return
+
+        else:
+            tm.send_message(
+                    "/addfilter usage:\n" \
+                    "    /addfilter <filter type> <filter argument>\n" \
+                    "    /addfilter <abbrev of feed> <filter type> <filter argument>", chat)
+            return
+
+        self.users[chat].add_filter(Filter(filter_type, filter_args))
 
     def handle_updates(self, updates):
         for update in updates['result']:
@@ -50,6 +75,9 @@ class arXiv_Kitten_bot:
 
             elif text_words[0] == '/addfeed':
                 self.add_feed(chat, text_words)
+
+            elif text_words[0] == '/addfilter':
+                self.add_filter(chat, text_words)
 
             elif text.startswith('/'):
                 continue
