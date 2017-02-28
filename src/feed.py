@@ -186,8 +186,8 @@ class Feed:
             'stat.TH': "Statistics Theory"
             }
 
-    def __init__(self, arg):
-        self.url = self.base_url
+    def __init__(self, feed_abbrv):
+        self.url = self.base_url + feed_abbrv
 
         self.feed = feedparser.parse(self.url)
         self.etag = self.feed.etag
