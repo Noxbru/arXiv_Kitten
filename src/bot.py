@@ -54,6 +54,10 @@ class arXiv_Kitten_bot:
                     "    /addfilter <abbrev of feed> <filter type> <filter argument>", chat)
             return
 
+        if not Filter.is_valid(filter_type):
+            tm.send_message("Invalid kind of filter: {}".format(filter_type), chat)
+            return
+
         self.users[chat].add_filter(Filter(filter_type, filter_args))
 
     def handle_updates(self, updates):
