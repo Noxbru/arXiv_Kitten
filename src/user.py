@@ -10,7 +10,7 @@ class User:
         self.last_feed_added = feed_name
 
     def add_filter(self, filter):
-        if self.last_feed_added == None:
-            return None
-
         self.feeds[self.last_feed_added] += [filter]
+
+    def has_last_feed(self):
+        return self.last_feed_added != None

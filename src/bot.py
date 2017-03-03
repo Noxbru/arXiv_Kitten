@@ -61,6 +61,10 @@ class arXiv_Kitten_bot:
            not self.add_feed(chat, [feed_name]):
             return
 
+        if not self.users[chat].has_last_feed():
+            tm.send_message("You need to have at least one feed to add filters", chat)
+            return
+
         self.users[chat].add_filter(Filter(filter_type, filter_args))
 
     def handle_updates(self, updates):
