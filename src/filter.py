@@ -8,15 +8,20 @@ class Filter_Type(Enum):
     SUMMARY = 3
 
 class Filter:
+    filter_type = {
+                'author':  Entry.match_author,
+                'title':   Entry.match_keyword_in_title,
+                'summary': Entry.match_keyword_in_summary
+            }
     def __init__(self, type, arg):
-        self.fun = {
-                Filter_Type.AUTHOR:  Entry.match_author,
-                Filter_Type.TITLE:   Entry.match_keyword_in_title,
-                Filter_Type.SUMMARY: Entry.match_keyword_in_summary
-            }[type]
+        self.fun = self.filter_type[type]
 
         self.arg  = arg
 
     def check_entry(self, entry):
         return self.fun(entry, self.arg)
+
+    @classmethod
+    def is_valid(cls, type):
+        return type in cls.filter_type.keys()
 
