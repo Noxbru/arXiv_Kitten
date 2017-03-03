@@ -36,6 +36,8 @@ class arXiv_Kitten_bot:
                 self.feeds[feed_name] = Feed(feed_name)
 
     def add_filter(self, chat, args):
+        feed_name = None
+
         if len(args) == 3:
             filter_type = args[1]
             filter_args = args[2]
@@ -43,9 +45,6 @@ class arXiv_Kitten_bot:
             feed_name   = args[1]
             filter_type = args[2]
             filter_args = args[3]
-
-            if not self.add_feed(chat, args):
-                return
 
         else:
             tm.send_message(
@@ -56,6 +55,10 @@ class arXiv_Kitten_bot:
 
         if not Filter.is_valid(filter_type):
             tm.send_message("Invalid kind of filter: {}".format(filter_type), chat)
+            return
+
+        if not feed_name == None and \
+           not self.add_feed(chat, [feed_name]):
             return
 
         self.users[chat].add_filter(Filter(filter_type, filter_args))
