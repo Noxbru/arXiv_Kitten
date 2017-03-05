@@ -23,20 +23,12 @@ class arXiv_Kitten_bot:
                     "\t/addfeed <abbrev of feed>", user.id)
             return
 
-        self.add_feed_action(user, feed_name)
-
-
-    def add_feed_action(self, user, feed_name):
         if not Feed.is_valid(feed_name):
             tm.send_message("Invalid feed: {}".format(feed_name), user.id)
-
-            return False
 
         if user.has_feed(feed_name):
             tm.send_message("Feed already exits: {}".format(feed_name), user.id)
             user.last_feed_added = feed_name
-
-            return True
 
         else:
             tm.send_message("Feed added: {}".format(feed_name), user.id)
@@ -44,8 +36,6 @@ class arXiv_Kitten_bot:
 
             if feed_name not in self.feeds.keys():
                 self.feeds[feed_name] = Feed(feed_name)
-
-            return True
 
 
     def add_filter(self, user, args):
@@ -70,9 +60,20 @@ class arXiv_Kitten_bot:
             tm.send_message("Invalid kind of filter: {}".format(filter_type), user.id)
             return
 
-        if not feed_name == None and \
-           not self.add_feed_action(user, feed_name):
-            return
+        # embeded add_feed function without some of the messages
+        # and without validation of the extraction of feed_name
+        if feed_name != None:
+            if not Feed.is_valid(feed_name):
+                tm.send_message("Invalid feed: {}".format(feed_name), user.id)
+                return
+            if user.has_feed(feed_name):
+                user.last_feed_added = feed_name
+            else:
+                tm.send_message("Feed added: {}".format(feed_name), user.id)
+                user.add_feed(feed_name)
+
+                if feed_name not in self.feeds.keys():
+                    self.feeds[feed_name] = Feed(feed_name)
 
         if not user.has_last_feed():
             tm.send_message("You need to have at least one feed to add filters", user.id)
