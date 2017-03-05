@@ -14,33 +14,33 @@ class arXiv_Kitten_bot:
         self.users = {}
         self.feeds = {}
 
-    def add_feed(self, chat, args):
+    def add_feed(self, user, args):
         try:
             feed_name = args[1]
         except Exception as e:
             tm.send_message(
                     "/addfeed usage:\n"
-                    "\t/addfeed <abbrev of feed>", chat)
+                    "\t/addfeed <abbrev of feed>", user.id)
             return
 
-        self.add_feed_action(chat, feed_name)
+        self.add_feed_action(user, feed_name)
 
 
-    def add_feed_action(self, chat, feed_name):
+    def add_feed_action(self, user, feed_name):
         if not Feed.is_valid(feed_name):
-            tm.send_message("Invalid feed: {}".format(feed_name), chat)
+            tm.send_message("Invalid feed: {}".format(feed_name), user.id)
 
             return False
 
-        if self.users[chat].has_feed(feed_name):
-            tm.send_message("Feed already exits: {}".format(feed_name), chat)
-            self.users[chat].last_feed_added = feed_name
+        if user.has_feed(feed_name):
+            tm.send_message("Feed already exits: {}".format(feed_name), user.id)
+            user.last_feed_added = feed_name
 
             return True
 
         else:
-            tm.send_message("Feed added: {}".format(feed_name), chat)
-            self.users[chat].add_feed(feed_name)
+            tm.send_message("Feed added: {}".format(feed_name), user.id)
+            user.add_feed(feed_name)
 
             if feed_name not in self.feeds.keys():
                 self.feeds[feed_name] = Feed(feed_name)
@@ -48,7 +48,7 @@ class arXiv_Kitten_bot:
             return True
 
 
-    def add_filter(self, chat, args):
+    def add_filter(self, user, args):
         feed_name = None
 
         if len(args) == 3:
@@ -63,33 +63,33 @@ class arXiv_Kitten_bot:
             tm.send_message(
                     "/addfilter usage:\n" \
                     "    /addfilter <filter type> <filter argument>\n" \
-                    "    /addfilter <abbrev of feed> <filter type> <filter argument>", chat)
+                    "    /addfilter <abbrev of feed> <filter type> <filter argument>", user.id)
             return
 
         if not Filter.is_valid(filter_type):
-            tm.send_message("Invalid kind of filter: {}".format(filter_type), chat)
+            tm.send_message("Invalid kind of filter: {}".format(filter_type), user.id)
             return
 
         if not feed_name == None and \
-           not self.add_feed_action(chat, feed_name):
+           not self.add_feed_action(user, feed_name):
             return
 
-        if not self.users[chat].has_last_feed():
-            tm.send_message("You need to have at least one feed to add filters", chat)
+        if not user.has_last_feed():
+            tm.send_message("You need to have at least one feed to add filters", user.id)
             return
 
-        self.users[chat].add_filter(Filter(filter_type, filter_args))
+        user.add_filter(Filter(filter_type, filter_args))
 
         tm.send_message("Filter ({}: {}) added to feed {}".format(
-            filter_type, filter_args, self.users[chat].last_feed_added), chat)
+            filter_type, filter_args, user.last_feed_added), user.id)
 
 
-    def list_filters(self, chat, args):
-        for (feed_abbrv, filters) in self.users[chat].feeds.items():
-            tm.send_message("Filters for feed: {}".format(feed_abbrv), chat)
+    def list_filters(self, user, args):
+        for (feed_abbrv, filters) in user.feeds.items():
+            tm.send_message("Filters for feed: {}".format(feed_abbrv), user.id)
 
             for filter in filters:
-                tm.send_message("\t+ {}".format(filter), chat)
+                tm.send_message("\t+ {}".format(filter), user.id)
 
 
     def handle_updates(self, updates):
@@ -106,19 +106,21 @@ class arXiv_Kitten_bot:
                 self.users[chat] = User(chat, user_name)
                 print("Created new user: {}".format(user_name))
 
+            user = self.users[chat]
+
             if text_words[0] == "/start":
                 tm.send_message(\
                     "Hello {},\n"\
-                    "Welcome to the arXiv Kitten bot".format(user_name), chat)
+                    "Welcome to the arXiv Kitten bot".format(user_name), user.id)
 
             elif text_words[0] == '/addfeed':
-                self.add_feed(chat, text_words)
+                self.add_feed(user, text_words)
 
             elif text_words[0] == '/addfilter':
-                self.add_filter(chat, text_words)
+                self.add_filter(user, text_words)
 
             elif text_words[0] == '/listfilters':
-                self.list_filters(chat, text_words)
+                self.list_filters(user, text_words)
 
             elif text.startswith('/'):
                 continue
