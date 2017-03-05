@@ -32,6 +32,12 @@ class arXiv_Kitten_bot:
 
             return False
 
+        if self.users[chat].has_feed(feed_name):
+            tm.send_message("Feed already exits: {}".format(feed_name), chat)
+            self.users[chat].last_feed_added = feed_name
+
+            return True
+
         else:
             tm.send_message("Feed added: {}".format(feed_name), chat)
             self.users[chat].add_feed(feed_name)

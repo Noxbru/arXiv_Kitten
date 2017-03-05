@@ -12,5 +12,8 @@ class User:
     def add_filter(self, filter):
         self.feeds[self.last_feed_added] += [filter]
 
+    def has_feed(self, feed_name):
+        return feed_name in self.feeds.keys()
+
     def has_last_feed(self):
         return self.last_feed_added != None
