@@ -23,6 +23,10 @@ class arXiv_Kitten_bot:
                     "\t/addfeed <abbrev of feed>", chat)
             return
 
+        self.add_feed_action(chat, feed_name)
+
+
+    def add_feed_action(self, chat, feed_name):
         if not Feed.is_valid(feed_name):
             tm.send_message("Invalid feed: {}".format(feed_name), chat)
 
@@ -34,6 +38,9 @@ class arXiv_Kitten_bot:
 
             if feed_name not in self.feeds.keys():
                 self.feeds[feed_name] = Feed(feed_name)
+
+            return True
+
 
     def add_filter(self, chat, args):
         feed_name = None
@@ -58,7 +65,7 @@ class arXiv_Kitten_bot:
             return
 
         if not feed_name == None and \
-           not self.add_feed(chat, [feed_name]):
+           not self.add_feed_action(chat, feed_name):
             return
 
         if not self.users[chat].has_last_feed():
