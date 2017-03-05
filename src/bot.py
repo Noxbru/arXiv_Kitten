@@ -85,6 +85,11 @@ class arXiv_Kitten_bot:
             filter_type, filter_args, user.last_feed_added), user.id)
 
 
+    def list_feeds(self, user,args):
+        tm.send_message("Feeds for user: {}".format(user.name), user.id)
+        for feed_name in user.feeds.keys():
+            tm.send_message("\t+ {}".format(feed_name), user.id)
+
     def list_filters(self, user, args):
         for (feed_abbrv, filters) in user.feeds.items():
             tm.send_message("Filters for feed: {}".format(feed_abbrv), user.id)
@@ -119,6 +124,9 @@ class arXiv_Kitten_bot:
 
             elif text_words[0] == '/addfilter':
                 self.add_filter(user, text_words)
+
+            elif text_words[0] == '/listfeeds':
+                self.list_feeds(user, text_words)
 
             elif text_words[0] == '/listfilters':
                 self.list_filters(user, text_words)
