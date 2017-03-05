@@ -67,6 +67,9 @@ class arXiv_Kitten_bot:
 
         self.users[chat].add_filter(Filter(filter_type, filter_args))
 
+        tm.send_message("Filter ({}: {}) added to feed {}".format(
+            filter_type, filter_args, self.users[chat].last_feed_added), chat)
+
     def handle_updates(self, updates):
         for update in updates['result']:
             if 'message' not in update.keys(): continue
