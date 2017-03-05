@@ -83,6 +83,15 @@ class arXiv_Kitten_bot:
         tm.send_message("Filter ({}: {}) added to feed {}".format(
             filter_type, filter_args, self.users[chat].last_feed_added), chat)
 
+
+    def list_filters(self, chat, args):
+        for (feed_abbrv, filters) in self.users[chat].feeds.items():
+            tm.send_message("Filters for feed: {}".format(feed_abbrv), chat)
+
+            for filter in filters:
+                tm.send_message("\t+ {}".format(filter), chat)
+
+
     def handle_updates(self, updates):
         for update in updates['result']:
             if 'message' not in update.keys(): continue
@@ -107,6 +116,9 @@ class arXiv_Kitten_bot:
 
             elif text_words[0] == '/addfilter':
                 self.add_filter(chat, text_words)
+
+            elif text_words[0] == '/listfilters':
+                self.list_filters(chat, text_words)
 
             elif text.startswith('/'):
                 continue

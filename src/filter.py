@@ -15,8 +15,13 @@ class Filter:
             }
     def __init__(self, type, arg):
         self.fun = self.filter_type[type]
+        self.type = type
 
         self.arg  = arg
+
+    def __str__(self):
+        return "{}: {}".format(self.type, self.arg)
+
 
     def check_entry(self, entry):
         return self.fun(entry, self.arg)
