@@ -1,4 +1,5 @@
 import telegram as tm
+from filter import Filter
 
 class User:
     def __init__(self, id, name):
@@ -16,8 +17,15 @@ class User:
 
         self.editing_feed = feed_name
 
-    def add_filter(self, filter):
-        self.feeds[self.editing_feed] += [filter]
+    def add_filter(self, filter_type, filter_args):
+        if not self.has_editing_feed():
+            tm.send_message("You need to have at least one feed to add filters", self.id)
+            return
+
+        self.feeds[self.editing_feed] += [Filter(filter_type, filter_args)]
+
+        tm.send_message("Filter ({}: {}) added to feed {}".format(
+            filter_type, filter_args, self.editing_feed), self.id)
 
     def has_feed(self, feed_name):
         return feed_name in self.feeds.keys()

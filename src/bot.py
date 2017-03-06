@@ -70,14 +70,7 @@ class arXiv_Kitten_bot:
                 if not self.has_feed(feed_name):
                     self.feeds[feed_name] = Feed(feed_name)
 
-        if not user.has_editing_feed():
-            tm.send_message("You need to have at least one feed to add filters", user.id)
-            return
-
-        user.add_filter(Filter(filter_type, filter_args))
-
-        tm.send_message("Filter ({}: {}) added to feed {}".format(
-            filter_type, filter_args, user.editing_feed), user.id)
+        user.add_filter(filter_type, filter_args)
 
 
     def list_feeds(self, user,args):
