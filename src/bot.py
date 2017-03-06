@@ -81,6 +81,25 @@ class arXiv_Kitten_bot:
 
         user.add_filter(filter_type, filter_args)
 
+
+    def delete_feed(self, user, args):
+        if len(args) == 2:
+            feed_name = args[1]
+        else:
+            tm.send_message(
+                    "/delete\_feed usage:\n" \
+                    "\t/delete\_feed <feed name>", user.id)
+            return
+
+        user.delete_feed(feed_name)
+
+        for us in self.users.values():
+            if us.has_feed(feed_name):
+                return
+        else:
+            self.feeds.pop(feed_name)
+
+
     def edit_feed(self, user, args):
         if len(args) == 2:
             feed_name = args[1]
@@ -135,6 +154,9 @@ class arXiv_Kitten_bot:
 
             elif text_words[0] == '/add_filter':
                 self.add_filter(user, text_words)
+
+            elif text_words[0] == '/delete_feed':
+                self.delete_feed(user, text_words)
 
             elif text_words[0] == '/edit_feed':
                 self.edit_feed(user, text_words)

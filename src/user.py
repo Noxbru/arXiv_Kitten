@@ -27,6 +27,13 @@ class User:
         tm.send_message("Filter ({}: {}) added to feed {}".format(
             filter_type, filter_args, self.editing_feed), self.id)
 
+    def delete_feed(self, feed_name):
+        if self.has_feed(feed_name):
+            tm.send_message("Feed deleted: {}".format(feed_name), self.id)
+            self.feeds.pop(feed_name)
+        else:
+            tm.send_message("You don't have the feed: {}".format(feed_name), self.id)
+
     def edit_feed(self, feed_name):
         if not self.has_feed(feed_name):
             tm.send_message("Feed doesn't exist: {}".format(feed_name), self.id)
