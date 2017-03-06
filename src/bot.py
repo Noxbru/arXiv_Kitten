@@ -155,6 +155,9 @@ class arXiv_Kitten_bot:
             elif text_words[0] == '/add_filter':
                 self.add_filter(user, text_words)
 
+            elif text_words[0] == '/add_filter_to_feed':
+                self.add_filter_to_feed(user, text_words)
+
             elif text_words[0] == '/delete_feed':
                 self.delete_feed(user, text_words)
 
