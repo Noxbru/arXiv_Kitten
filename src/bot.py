@@ -64,7 +64,6 @@ class arXiv_Kitten_bot:
             if user.has_feed(feed_name):
                 user.editing_feed = feed_name
             else:
-                tm.send_message("Feed added: {}".format(feed_name), user.id)
                 user.add_feed(feed_name)
 
                 if not self.has_feed(feed_name):
