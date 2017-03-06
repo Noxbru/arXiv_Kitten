@@ -25,17 +25,12 @@ class arXiv_Kitten_bot:
 
         if not Feed.is_valid(feed_name):
             tm.send_message("Invalid feed: {}".format(feed_name), user.id)
+            return
 
-        elif user.has_feed(feed_name):
-            tm.send_message("Feed already exits: {}".format(feed_name), user.id)
-            user.editing_feed = feed_name
+        user.add_feed(feed_name)
 
-        else:
-            tm.send_message("Feed added: {}".format(feed_name), user.id)
-            user.add_feed(feed_name)
-
-            if feed_name not in self.feeds.keys():
-                self.feeds[feed_name] = Feed(feed_name)
+        if feed_name not in self.feeds.keys():
+            self.feeds[feed_name] = Feed(feed_name)
 
 
     def add_filter(self, user, args):
