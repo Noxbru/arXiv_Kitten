@@ -29,7 +29,7 @@ class arXiv_Kitten_bot:
 
         user.add_feed(feed_name)
 
-        if feed_name not in self.feeds.keys():
+        if not self.has_feed(feed_name):
             self.feeds[feed_name] = Feed(feed_name)
 
 
@@ -67,7 +67,7 @@ class arXiv_Kitten_bot:
                 tm.send_message("Feed added: {}".format(feed_name), user.id)
                 user.add_feed(feed_name)
 
-                if feed_name not in self.feeds.keys():
+                if not self.has_feed(feed_name):
                     self.feeds[feed_name] = Feed(feed_name)
 
         if not user.has_editing_feed():
@@ -92,6 +92,9 @@ class arXiv_Kitten_bot:
             for filter in filters:
                 tm.send_message("\t+ {}".format(filter), user.id)
 
+
+    def has_feed(self, feed_name):
+        return feed_name in self.feeds.keys()
 
     def handle_updates(self, updates):
         for update in updates['result']:
