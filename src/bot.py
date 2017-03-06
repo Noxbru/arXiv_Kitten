@@ -28,7 +28,7 @@ class arXiv_Kitten_bot:
 
         if user.has_feed(feed_name):
             tm.send_message("Feed already exits: {}".format(feed_name), user.id)
-            user.last_feed_added = feed_name
+            user.editing_feed = feed_name
 
         else:
             tm.send_message("Feed added: {}".format(feed_name), user.id)
@@ -67,7 +67,7 @@ class arXiv_Kitten_bot:
                 tm.send_message("Invalid feed: {}".format(feed_name), user.id)
                 return
             if user.has_feed(feed_name):
-                user.last_feed_added = feed_name
+                user.editing_feed = feed_name
             else:
                 tm.send_message("Feed added: {}".format(feed_name), user.id)
                 user.add_feed(feed_name)
@@ -75,14 +75,14 @@ class arXiv_Kitten_bot:
                 if feed_name not in self.feeds.keys():
                     self.feeds[feed_name] = Feed(feed_name)
 
-        if not user.has_last_feed():
+        if not user.has_editing_feed():
             tm.send_message("You need to have at least one feed to add filters", user.id)
             return
 
         user.add_filter(Filter(filter_type, filter_args))
 
         tm.send_message("Filter ({}: {}) added to feed {}".format(
-            filter_type, filter_args, user.last_feed_added), user.id)
+            filter_type, filter_args, user.editing_feed), user.id)
 
 
     def list_feeds(self, user,args):
