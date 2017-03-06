@@ -19,8 +19,8 @@ class arXiv_Kitten_bot:
             feed_name = args[1]
         except Exception as e:
             tm.send_message(
-                    "/addfeed usage:\n"
-                    "\t/addfeed <abbrev of feed>", user.id)
+                    "/add\_feed usage:\n"
+                    "\t/add\_feed <abbrev of feed>", user.id)
             return
 
         if not Feed.is_valid(feed_name):
@@ -46,9 +46,9 @@ class arXiv_Kitten_bot:
 
         else:
             tm.send_message(
-                    "/addfilter usage:\n" \
-                    "    /addfilter <filter type> <filter argument>\n" \
-                    "    /addfilter <abbrev of feed> <filter type> <filter argument>", user.id)
+                    "/add\_filter usage:\n" \
+                    "\t/add\_filter <filter type> <filter argument>\n" \
+                    "\t/add\_filter <abbrev of feed> <filter type> <filter argument>", user.id)
             return
 
         if not Filter.is_valid(filter_type):
@@ -109,16 +109,16 @@ class arXiv_Kitten_bot:
                     "Hello {},\n"\
                     "Welcome to the arXiv Kitten bot".format(user_name), user.id)
 
-            elif text_words[0] == '/addfeed':
+            elif text_words[0] == '/add_feed':
                 self.add_feed(user, text_words)
 
-            elif text_words[0] == '/addfilter':
+            elif text_words[0] == '/add_filter':
                 self.add_filter(user, text_words)
 
-            elif text_words[0] == '/listfeeds':
+            elif text_words[0] == '/list_feeds':
                 self.list_feeds(user, text_words)
 
-            elif text_words[0] == '/listfilters':
+            elif text_words[0] == '/list_filters':
                 self.list_filters(user, text_words)
 
             elif text.startswith('/'):
