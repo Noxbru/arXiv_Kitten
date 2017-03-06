@@ -10,7 +10,7 @@ class User:
 
     def add_feed(self, feed_name):
         if self.has_feed(feed_name):
-            tm.send_message("Feed already exits: {}".format(feed_name), self.id)
+            tm.send_message("Feed already exists: {}".format(feed_name), self.id)
         else:
             tm.send_message("Feed added: {}".format(feed_name), self.id)
             self.feeds[feed_name] = []
@@ -26,6 +26,15 @@ class User:
 
         tm.send_message("Filter ({}: {}) added to feed {}".format(
             filter_type, filter_args, self.editing_feed), self.id)
+
+    def edit_feed(self, feed_name):
+        if not self.has_feed(feed_name):
+            tm.send_message("Feed doesn't exist: {}".format(feed_name), self.id)
+            return
+
+        self.editing_feed = feed_name
+        tm.send_message("Editing Feed: {}".format(feed_name), self.id)
+
 
     def has_feed(self, feed_name):
         return feed_name in self.feeds.keys()
