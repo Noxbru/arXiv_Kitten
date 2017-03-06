@@ -99,6 +99,22 @@ class arXiv_Kitten_bot:
         else:
             self.feeds.pop(feed_name)
 
+    def delete_filter(self, user, args):
+        if len(args) == 3:
+            filter_type = args[1]
+            filter_args = args[2]
+        else:
+            tm.send_message(
+                    "/delete\_filter usage:\n" \
+                    "\t/delete\_filter <filter type> <filter argument>", user.id)
+            return
+
+        if not Filter.is_valid(filter_type):
+            tm.send_message("Invalid kind of filter: {}".format(filter_type), user.id)
+            return
+
+        user.delete_filter(filter_type, filter_args)
+
 
     def edit_feed(self, user, args):
         if len(args) == 2:
@@ -160,6 +176,9 @@ class arXiv_Kitten_bot:
 
             elif text_words[0] == '/delete_feed':
                 self.delete_feed(user, text_words)
+
+            elif text_words[0] == '/delete_filter':
+                self.delete_filter(user, text_words)
 
             elif text_words[0] == '/edit_feed':
                 self.edit_feed(user, text_words)

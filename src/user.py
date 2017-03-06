@@ -34,6 +34,22 @@ class User:
         else:
             tm.send_message("You don't have the feed: {}".format(feed_name), self.id)
 
+
+    def delete_filter(self, filter_type, filter_args):
+        feed_filters = self.feeds[self.editing_feed]
+        for (i, f) in enumerate(feed_filters):
+            if f.type == filter_type and f.arg == filter_args:
+                del feed_filters[i]
+
+                tm.send_message("Deleted filter ({}: {}) from feed {}".format(
+                    filter_type, filter_args, self.editing_feed), self.id)
+
+                return
+        else:
+            tm.send_message("Filter ({}: {}) not found in feed {}".format(
+                filter_type, filter_args, self.editing_feed), self.id)
+
+
     def edit_feed(self, feed_name):
         if not self.has_feed(feed_name):
             tm.send_message("Feed doesn't exist: {}".format(feed_name), self.id)
