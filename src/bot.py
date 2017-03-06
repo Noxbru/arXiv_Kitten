@@ -26,7 +26,7 @@ class arXiv_Kitten_bot:
         if not Feed.is_valid(feed_name):
             tm.send_message("Invalid feed: {}".format(feed_name), user.id)
 
-        if user.has_feed(feed_name):
+        elif user.has_feed(feed_name):
             tm.send_message("Feed already exits: {}".format(feed_name), user.id)
             user.editing_feed = feed_name
 
