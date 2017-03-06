@@ -34,21 +34,35 @@ class arXiv_Kitten_bot:
 
 
     def add_filter(self, user, args):
-        feed_name = None
-
         if len(args) == 3:
             filter_type = args[1]
             filter_args = args[2]
-        elif len(args) == 4:
-            feed_name   = args[1]
-            filter_type = args[2]
-            filter_args = args[3]
-
         else:
             tm.send_message(
                     "/add\_filter usage:\n" \
-                    "\t/add\_filter <filter type> <filter argument>\n" \
-                    "\t/add\_filter <abbrev of feed> <filter type> <filter argument>", user.id)
+                    "\t/add\_filter <filter type> <filter argument>", user.id)
+            return
+
+        if not Filter.is_valid(filter_type):
+            tm.send_message("Invalid kind of filter: {}".format(filter_type), user.id)
+            return
+
+        user.add_filter(filter_type, filter_args)
+
+
+    def add_filter_to_feed(self, user, args):
+        if len(args) == 4:
+            feed_name   = args[1]
+            filter_type = args[2]
+            filter_args = args[3]
+        else:
+            tm.send_message(
+                    "/add\_filter\_to\_feed usage:\n" \
+                    "\t/add\_filter\_to\_feed <abbrev of feed> <filter type> <filter argument>", user.id)
+            return
+
+        if not Feed.is_valid(feed_name):
+            tm.send_message("Invalid feed: {}".format(feed_name), user.id)
             return
 
         if not Filter.is_valid(filter_type):
@@ -57,17 +71,13 @@ class arXiv_Kitten_bot:
 
         # embeded add_feed function without some of the messages
         # and without validation of the extraction of feed_name
-        if feed_name != None:
-            if not Feed.is_valid(feed_name):
-                tm.send_message("Invalid feed: {}".format(feed_name), user.id)
-                return
-            if user.has_feed(feed_name):
-                user.editing_feed = feed_name
-            else:
-                user.add_feed(feed_name)
+        if user.has_feed(feed_name):
+            user.editing_feed = feed_name
+        else:
+            user.add_feed(feed_name)
 
-                if not self.has_feed(feed_name):
-                    self.feeds[feed_name] = Feed(feed_name)
+            if not self.has_feed(feed_name):
+                self.feeds[feed_name] = Feed(feed_name)
 
         user.add_filter(filter_type, filter_args)
 
