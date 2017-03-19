@@ -187,8 +187,8 @@ class arXiv_Kitten_bot:
         tm.send_message(msg, user.id)
 
 
-    def send_entry(self, entry, user):
-        tm.send_message(entry.format_entry(), user.id)
+    def send_entry(self, entry, user, reason = None):
+        tm.send_message(entry.format_entry(reason), user.id)
 
 
     def has_feed(self, feed_name):
