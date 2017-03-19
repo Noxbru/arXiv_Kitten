@@ -137,11 +137,15 @@ class arXiv_Kitten_bot:
 
 
     def list_filters(self, user, args):
+        msg = ""
         for (feed_abbrv, filters) in user.feeds.items():
-            tm.send_message("Filters for feed: {}".format(feed_abbrv), user.id)
+            msg += "Filters for feed: {}\n".format(feed_abbrv)
 
             for filter in filters:
-                tm.send_message("\t+ {}".format(filter), user.id)
+                msg += "\t+ {}\n".format(filter)
+
+        tm.send_message(msg, user.id)
+
 
 
     def has_feed(self, feed_name):
