@@ -56,7 +56,7 @@ class Entry:
         summary[-4:] == "</p>":
             summary = summary[3:-4]
 
-        return summary
+        return summary.replace(" </p> <p>", '\n\n')
 
     @staticmethod
     def get_title(title):
