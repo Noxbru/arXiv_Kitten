@@ -83,6 +83,45 @@ class arXiv_Kitten_bot:
         user.add_filter(filter_type, filter_args)
 
 
+    def check_feed(self, user, args):
+        if len(args) == 2:
+            feed_name = args[1]
+        else:
+            tm.send_message(
+                    "/check\_feed usage:\n" \
+                    "\t/check\_feed <feed name>", user.id)
+            return
+
+        if not Feed.is_valid(feed_name):
+            tm.send_message("Invalid feed: {}".format(feed_name), user.id)
+            return
+
+        if not user.has_feed(feed_name):
+            tm.send_message(
+                    "You don't have that feed in your list of feeds", user.id)
+            return
+
+        if len(user.feeds[feed_name]) == 0:
+            tm.send_message("You don't have any filter created for the feed {}," \
+                            " create one first".format(feed_name), user.id)
+            return
+
+        for e in self.feeds[feed_name].entries[0:1]:
+            for f in user.feeds[feed_name]:
+                if f.check_entry(e):
+                    self.entries_to_send[user.id][e.id] = \
+                        {'entry': e, 'reason': f}
+
+        if len(self.entries_to_send[user.id]) == 0:
+            tm.send_message("No entries matched your filters for feed {}"
+                    .format(feed_name), user.id)
+        else:
+            for e in self.entries_to_send[user.id].values():
+                self.send_entry(e['entry'], user, e['reason'])
+
+            self.entries_to_send[user.id] = {}
+
+
     def delete_feed(self, user, args):
         if len(args) == 2:
             feed_name = args[1]
@@ -185,6 +224,9 @@ class arXiv_Kitten_bot:
 
             elif text_words[0] == '/add_filter_to_feed':
                 self.add_filter_to_feed(user, text_words)
+
+            elif text_words[0] == '/check_feed':
+                self.check_feed(user, text_words)
 
             elif text_words[0] == '/delete_feed':
                 self.delete_feed(user, text_words)
