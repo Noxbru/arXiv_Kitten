@@ -13,6 +13,7 @@ class arXiv_Kitten_bot:
     def __init__(self):
         self.users = {}
         self.feeds = {}
+        self.entries_to_send = {}
 
     def add_feed(self, user, args):
         try:
@@ -166,6 +167,7 @@ class arXiv_Kitten_bot:
 
             if chat not in self.users.keys():
                 self.users[chat] = User(chat, user_name)
+                self.entries_to_send[chat] = {}
                 print("Created new user: {}".format(user_name))
 
             user = self.users[chat]
