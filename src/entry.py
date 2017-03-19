@@ -14,6 +14,19 @@ class Entry:
                 "Summary of entry: {}" \
                 .format(self.id, self.title, self.authors, self.summary)
 
+    def format_entry(self, reason = None, wants_summary = False):
+        text = "Title: {}\n" \
+                "Authors :{}\n" \
+                "Link: {}\n".format(self.title, self.authors, self.id)
+
+        if reason != None:
+            text += "Matched by filter: {}\n".format(reason)
+
+        if wants_summary == True:
+            text += "Summary: {}\n".format(self.summary)
+
+        return text
+
     def match_author(self, _author):
         for author in self.authors:
             if author.lower() == _author.lower():
